@@ -91,8 +91,9 @@
 
                     if (rocket.x < ufo.x && rocket.y < ufo.y) {
                         rocket.Image.src = "img/explosion.png";
-                        ufos = ufos.filter(u => u != ufo);
-                        alert("Du bist kein wahrer Alpha");
+                        ufos = ufos.filter(u => u != ufo);    
+                        location.reload();
+
 
                     }
 
