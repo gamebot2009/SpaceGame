@@ -7,15 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raumschiffschlacht</title>
 
+
     <style>
         canvas {
             background-color: rgba(0, 0, 0, 0.8);
 
+        }
 
+        .menu-content {
+            padding: 14px 870px;
         }
     </style>
 
-    <script>
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+
+    <script> //Menu
+
+
+    </script>
+
+    <script> // Menu
         let KEY_SPACE = false; // 32
         let KEY_UP = false; // 38
         let KEY_DOWN = false; // 40
@@ -47,11 +63,11 @@
                 KEY_SPACE = true;
             }
 
-            if (e.keyCode == 38) {  // oben gedrückt
+            if (e.keyCode == 87) {  // oben gedrückt
                 KEY_UP = true;
             }
 
-            if (e.keyCode == 40) {  // unten gedrückt
+            if (e.keyCode == 83) {  // unten gedrückt
                 KEY_DOWN = true;
             }
         }
@@ -61,17 +77,18 @@
                 KEY_SPACE = false;
             }
 
-            if (e.keyCode == 38) {  // oben losgelassen
+            if (e.keyCode == 87) {  // oben losgelassen
                 KEY_UP = false;
             }
 
-            if (e.keyCode == 40) {  // unten losgelassen
+            if (e.keyCode == 83) {  // unten losgelassen
                 KEY_DOWN = false;
 
             }
         }
 
         function startGame() {
+            document.getElementById("startBtn").disabled = true;
             canvas = document.getElementById("canvas");
             ctx = canvas.getContext("2d");
             LoadImages();
@@ -87,17 +104,22 @@
 
         function checkForCollision() {
             ufos.forEach(function (ufo) {
-                if (rocket.x + rocket.width > ufo.x && rocket.y + rocket.height > ufo.y) {
 
-                    if (rocket.x < ufo.x && rocket.y < ufo.y) {
-                        rocket.Image.src = "img/explosion.png";
-                        ufos = ufos.filter(u => u != ufo);    
-                        location.reload();
+                if (rocket.x + rocket.width > ufo.x &&
+                    rocket.y + rocket.height > ufo.y &&
+                    rocket.x < ufo.x &&
+                    rocket.y < ufo.y + ufo.height
+                ) {
 
 
-                    }
+                    rocket.Image.src = "img/explosion.png";
+                    ufos = ufos.filter(u => u != ufo);
+                    location.reload();
+
 
                 }
+
+
 
                 bullets.forEach(function (bullet) {
                     // Kontrollieren, ob Laser mit Rakete kollidiert
@@ -120,7 +142,7 @@
             });
 
 
-          
+
 
         }
 
@@ -150,23 +172,32 @@
                 rocket.y += rocketSpeed;
             }
 
+            //UFOS
             ufos.forEach(function (ufo) {
                 if (!ufo.hit) {
                     ufo.x -= ufoSpeed;
 
                 }
 
+                if (ufo.x <= -300) {
+                    ufos = ufos.filter(u => u != ufo);
+                }
+
             })
 
+
+            //Bullets
             if (KEY_SPACE && canShoot) {
                 createBullets();
 
             }
 
-
-
             bullets.forEach(function (bullet) {
                 bullet.x += shootSpeed;
+
+                if (bullet.x >= 2000) {
+                    bullets = bullets.filter(u => u != bullet);
+                }
             })
 
 
@@ -213,16 +244,33 @@
                 ctx.drawImage(bullet.Image, bullet.x, bullet.y, bullet.width, bullet.height);
             })
 
+
+
+
             requestAnimationFrame(draw);
         }
 
     </script>
 </head>
 
-<body onload="startGame()">
-    <canvas id="canvas" width="1890" height="910">
+<body>
+    <canvas id="canvas" width="1920" height="860">
 
     </canvas>
+
+    <div class="menu-content">
+
+        <form onsubmit="startGame(); return false;" >
+            <!-- Accent-colored raised button with ripple -->
+            <button id="startBtn" type="submit"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Starten
+            </button>
+
+        </form>
+
+
+    </div>
 
 </body>
 
